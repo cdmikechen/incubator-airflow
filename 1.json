@@ -1,0 +1,107 @@
+{
+  'name': '[DAG]',
+  'children': [
+    {
+      'name': 'extract_dw_dw_lims_actor_obj_auth',
+      'instances': [
+        {
+          'task_id': 'extract_dw_dw_lims_actor_obj_auth',
+          'dag_id': 'lims_actor_obj_auth',
+          'execution_date': '2018-05-31T00:00:00',
+          'start_date': '2018-06-01T06:18:48.686860',
+          'end_date': '2018-06-01T06:18:50.133078',
+          'duration': 1.44622,
+          'state': 'success',
+          'try_number': 3,
+          'max_tries': 2,
+          'hostname': 'data1.cshdp.com',
+          'unixname': 'hdfs',
+          'job_id': 7,
+          'pool': None,
+          'queue': 'default',
+          'priority_weight': 1,
+          'operator': 'SimpleHttpOperator',
+          'queued_dttm': '2018-06-01T06:04:57.658159',
+          'pid': 1582,
+          'external_trigger': False
+        }
+      ],
+      'children': [
+        {
+          'name': 'extract_dw_lims_actor_obj_auth',
+          'instances': [
+            {
+              'task_id': 'extract_dw_lims_actor_obj_auth',
+              'dag_id': 'lims_actor_obj_auth',
+              'execution_date': '2018-05-31T00:00:00',
+              'start_date': '2018-06-01T06:14:25.135572',
+              'end_date': '2018-06-01T06:14:26.602707',
+              'duration': 1.46713,
+              'state': 'success',
+              'try_number': 3,
+              'max_tries': 2,
+              'hostname': 'data1.cshdp.com',
+              'unixname': 'hdfs',
+              'job_id': 5,
+              'pool': None,
+              'queue': 'default',
+              'priority_weight': 2,
+              'operator': 'SimpleHttpOperator',
+              'queued_dttm': '2018-06-01T06:04:53.352446',
+              'pid': 1401,
+              'external_trigger': False
+            }
+          ],
+          'children': [],
+          'num_dep': 0,
+          'operator': 'SimpleHttpOperator',
+          'retries': 1,
+          'owner': 'admin',
+          'start_date': datetime
+          .
+          datetime
+          (
+          2018,
+          5,
+          31,
+          0,
+          0
+          ),
+          'end_date': None,
+          'depends_on_past': True,
+          'ui_color': '#f4a460'
+        }
+      ],
+      'num_dep': 1,
+      'operator': 'SimpleHttpOperator',
+      'retries': 1,
+      'owner': 'admin',
+      'start_date': datetime
+      .
+      datetime
+      (
+      2018,
+      5,
+      31,
+      0,
+      0
+      ),
+      'end_date': None,
+      'depends_on_past': True,
+      'ui_color': '#f4a460'
+    }
+  ],
+  'instances': [
+    {
+      'id': 1,
+      'dag_id': 'lims_actor_obj_auth',
+      'execution_date': '2018-05-31T00:00:00',
+      'start_date': '2018-06-01T06:14:17.641160',
+      'end_date': None,
+      'state': 'success',
+      'run_id': 'scheduled__2018-05-31T00:00:00',
+      'external_trigger': False,
+      'conf': None
+    }
+  ]
+}

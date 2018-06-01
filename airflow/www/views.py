@@ -1176,7 +1176,24 @@ class Airflow(BaseView):
             session, start_date=min_date, end_date=base_date)
         task_instances = {}
         for ti in tis:
+
+            # if ti.start_date is not None:
+            #     ti.start_date = ti.start_date + timedelta(hours=8)
+            # if ti.end_date is not None:
+            #     ti.end_date = ti.end_date + timedelta(hours=8)
+
             tid = alchemy_to_dict(ti)
+
+            # 更新树状节点的开始结束时间，从utc转为本地时间+8时区
+            # if tid["start_date"] is not None:
+            #     tid["start_date"] = tid["start_date"] + timedelta(hours=8)
+            # if tid["end_date"] is not None:
+            #     tid["end_date"] = tid["end_date"] + timedelta(hours=8)
+            # if ti.start_date is not None:
+            #     ti.start_date = ti.start_date - timedelta(hours=8)
+            # if ti.end_date is not None:
+            #     ti.end_date = ti.end_date - timedelta(hours=8)
+
             dr = dag_runs.get(ti.execution_date)
             tid['external_trigger'] = dr['external_trigger'] if dr else False
             task_instances[(ti.task_id, ti.execution_date)] = tid
@@ -1238,6 +1255,8 @@ class Airflow(BaseView):
                 dag_runs.get(d) or {'execution_date': d.isoformat()}
                 for d in dates],
         }
+
+        # print (data)
 
         data = json.dumps(data, indent=4, default=json_ser)
         session.commit()
