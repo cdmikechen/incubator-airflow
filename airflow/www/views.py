@@ -96,6 +96,7 @@ PAGE_SIZE = conf.getint('webserver', 'page_size')
 if conf.getboolean('webserver', 'FILTER_BY_OWNER'):
     # filter_by_owner if authentication is enabled and filter_by_owner is true
     FILTER_BY_OWNER = not current_app.config['LOGIN_DISABLED']
+    print('FILTER_BY_OWNER is %s', FILTER_BY_OWNER)
 
 
 def dag_link(v, c, m, p):
@@ -1797,6 +1798,7 @@ class HomeView(AdminIndexView):
         DM = models.DagModel
 
         # restrict the dags shown if filter_by_owner and current user is not superuser
+        # print('FILTER_BY_OWNER is %s , is_superuser is %s ' %(FILTER_BY_OWNER,current_user.is_superuser()))
         do_filter = FILTER_BY_OWNER and (not current_user.is_superuser())
         owner_mode = conf.get('webserver', 'OWNER_MODE').strip().lower()
 
@@ -1812,6 +1814,31 @@ class HomeView(AdminIndexView):
 
         arg_current_page = request.args.get('page', '0')
         arg_search_query = request.args.get('search', None)
+
+        arg_filter_owner_query = request.args.get('filter_owner', None)
+        arg_filter_date = request.args.get('filter_date', None)
+        arg_filter_state = request.args.get('filter_state', None)
+
+        list_dag_id = []
+        if arg_filter_owner_query != None and arg_filter_date and arg_filter_state :
+
+            qry = (
+                session.query(DagRun.dag_id)
+                    .join(DM, DM.dag_id == DagRun.dag_id)
+                    .filter(DagRun.state == arg_filter_state if arg_filter_state != None else 1==1)
+                    .filter(DagRun.start_date >= arg_filter_date if arg_filter_date != None else 1==1)
+                    .filter(DM.is_paused == False)
+                    .filter(DM.owners == arg_filter_owner_query)
+                    .filter(DagRun.dag_id.like((arg_search_query if arg_search_query != None else '%') + '%'))
+                    .distinct().all()
+            )
+
+            for row in qry:
+                list_dag_id.append(row.dag_id)
+            print(list_dag_id)
+
+        # list_dag_id = arg_dag_id.split(",") if arg_dag_id != None else None
+        # print('arg_dag_id is %s, list_dag_id is %s' %(arg_dag_id, list_dag_id))
 
         dags_per_page = PAGE_SIZE
         current_page = get_int_arg(arg_current_page, default=0)
@@ -1833,10 +1860,21 @@ class HomeView(AdminIndexView):
                 DM.owners.in_(current_user.ldap_groups)
             )
         elif do_filter and owner_mode == 'user':
+            # print('~DM.is_subdag is %s, DM.is_active is %s, DM.owners is %s, current_user.user.username is %s' %(~DM.is_subdag, DM.is_active, DM.owners, current_user.user.username))
             sql_query = sql_query.filter(
                 ~DM.is_subdag, DM.is_active,
                 DM.owners == current_user.user.username
             )
+        elif arg_filter_owner_query != None and arg_filter_owner_query != '':
+            print('arg_filter_owner_query is %s' %(arg_filter_owner_query))
+            sql_query = sql_query.filter(
+                ~DM.is_subdag, DM.is_active,
+                DM.owners == arg_filter_owner_query
+            )
+            if len(list_dag_id) > 0 :
+                sql_query = sql_query.filter(
+                    DM.dag_id.in_(list_dag_id)
+                )
         else:
             sql_query = sql_query.filter(
                 ~DM.is_subdag, DM.is_active
@@ -1884,6 +1922,13 @@ class HomeView(AdminIndexView):
                 for dag in unfiltered_webserver_dags
                 if dag.owner == current_user.user.username
             }
+        elif arg_filter_owner_query != None and arg_filter_owner_query != '':
+            webserver_dags = {
+                dag.dag_id: dag
+                for dag in unfiltered_webserver_dags
+                if (dag.owner == arg_filter_owner_query and len(list_dag_id) == 0)
+                or (dag.owner == arg_filter_owner_query and len(list_dag_id) > 0 and dag.dag_id in list_dag_id)
+                }
         else:
             webserver_dags = {
                 dag.dag_id: dag
@@ -1939,7 +1984,10 @@ class HomeView(AdminIndexView):
             num_of_all_dags=num_of_all_dags,
             paging=wwwutils.generate_pages(current_page, num_of_pages,
                                            search=arg_search_query,
-                                           showPaused=not hide_paused),
+                                           showPaused=not hide_paused,
+                                           filter_owner=arg_filter_owner_query,
+                                           filter_date=arg_filter_date,
+                                           filter_state=arg_filter_state),
             dag_ids_in_page=page_dag_ids,
             auto_complete_data=auto_complete_data)
 
