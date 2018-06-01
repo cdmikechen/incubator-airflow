@@ -35,7 +35,7 @@
       <div class="col-sm-10">
         <form id="search_form" class="form-inline" style="width: 100%; text-align: right;">
             <div id="dags_filter" class="form-group" style="width: 100%;">
-              <label for="dag_query" style="width:20%; text-align: right;">Search:</label>
+              <label for="dag_query" style="width:20%; text-align: right;">搜索:</label>
               <input id="dag_query" type="text" class="typeahead form-control" data-provide="typeahead" style="width:50%;" value="{{search_query}}">
             </div>
         </form>
@@ -45,21 +45,21 @@
         <thead>
             <tr>
                 <th></th>
-                <th width="12"><span id="pause_header" class="glyphicon glyphicon-info-sign" title="Use this toggle to pause a DAG. The scheduler won't schedule new tasks instances for a paused DAG. Tasks already running at pause time won't be affected."></span></th>
+                <th width="12"><span id="pause_header" class="glyphicon glyphicon-info-sign" title="切换暂停DAG。调度器不会为暂停的DAG安排新任务实例。在暂停时候运行的任务不会受到影响。"></span></th>
                 <th>DAG</th>
-                <th>Schedule</th>
-                <th>Owner</th>
-                <th style="padding-left: 5px;">Recent Tasks
-                  <span id="statuses_info" class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Status of tasks from all active DAG runs or, if not currently active, from most recent run."></span>
+                <th>调度时间间隔</th>
+                <th>所有者</th>
+                <th style="padding-left: 5px;">最近执行任务
+                  <span id="statuses_info" class="glyphicon glyphicon-info-sign" aria-hidden="true" title="所有激活的DAG的运行任务的状态，或者如果不是最近激活的则是离目前最近的时间点的。"></span>
                   <img id="loading" width="15" src="{{ url_for("static", filename="loading.gif") }}">
                 </th>
-                <th style="padding-left: 5px;">Last Run <span id="statuses_info" class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Execution Date/Time of Highest Dag Run."></span>
+                <th style="padding-left: 5px;">最后执行任务 <span id="statuses_info" class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Dag执行的最新一次时间"></span>
                 </th>
-                <th style="padding-left: 5px;">DAG Runs
-                  <span id="statuses_info" class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Status of all previous DAG runs."></span>
+                <th style="padding-left: 5px;">运行情况
+                  <span id="statuses_info" class="glyphicon glyphicon-info-sign" aria-hidden="true" title="所有之前运行的DAG状态。"></span>
                   <img id="loading" width="15" src="{{ url_for("static", filename="loading.gif") }}">
                 </th>
-                <th class="text-center">Links</th>
+                <th class="text-center">执行链接</th>
             </tr>
         </thead>
         <tbody>
@@ -90,10 +90,10 @@
                     </a>
                     {% else %}
                         {{ dag_id }}
-                        <span class="glyphicon glyphicon-info-sign" class="info" aria-hidden="true" title="This DAG isn't available in the web server's DagBag object. It shows up in this list because the scheduler marked it as active in the metadata database."></span>
+                        <span class="glyphicon glyphicon-info-sign" class="info" aria-hidden="true" title="此DAG在Web服务器的DagBag对象中不可用。它显示在这个列表中是因为调度器在元数据数据库中将其标记为活动。"></span>
                     {% endif %}
                     {% if dag_id not in orm_dags %}
-                        <span class="glyphicon glyphicon-info-sign" class="info" aria-hidden="true" title="This DAG seems to be existing only locally. The master scheduler doesn't seem to be aware of its existence."></span>
+                        <span class="glyphicon glyphicon-info-sign" class="info" aria-hidden="true" title="这个DAG可能只存在于本地。主节点的调度器可能不能识别它的存在。"></span>
                     {% endif %}
                 </td>
 
@@ -124,7 +124,7 @@
                       <a href="{{ url_for('airflow.graph', dag_id=dag.dag_id, execution_date=last_run.execution_date) }}">
                         {{ last_run.execution_date.strftime("%Y-%m-%d %H:%M") }}
                       </a>
-                      <span aria-hidden="true" id="statuses_info" title="Start Date: {{ last_run.start_date.strftime("%Y-%m-%d %H:%M") }}" class="glyphicon glyphicon-info-sign"></span>
+                      <span aria-hidden="true" id="statuses_info" title="开始时间: {{ last_run.start_date.strftime("%Y-%m-%d %H:%M") }}" class="glyphicon glyphicon-info-sign"></span>
                     {% endif %}
                   {% endif %}
                 </td>
@@ -141,53 +141,53 @@
                 <!-- Trigger Dag -->
                 <a href="{{ url_for('airflow.trigger', dag_id=dag.dag_id) }}"
                    onclick="return confirmTriggerDag('{{ dag.safe_dag_id }}')">
-                    <span class="glyphicon glyphicon-play-circle" aria-hidden="true" data-original-title="Trigger Dag"></span>
+                    <span class="glyphicon glyphicon-play-circle" aria-hidden="true" data-original-title="切换Dag"></span>
                 </a>
 
                 <!-- Tree -->
                 <a href="{{ url_for('airflow.tree', dag_id=dag.dag_id, num_runs=25) }}">
-                    <span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true" data-original-title="Tree View"></span>
+                    <span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true" data-original-title="树形视图"></span>
                 </a>
 
                 <!-- Graph -->
                 <a href="{{ url_for('airflow.graph', dag_id=dag.dag_id) }}">
-                    <span class="glyphicon glyphicon-certificate" aria-hidden="true" data-original-title="Graph View"></span>
+                    <span class="glyphicon glyphicon-certificate" aria-hidden="true" data-original-title="图像视图"></span>
                 </a>
 
                 <!-- Duration -->
                 <a href="{{ url_for('airflow.duration', dag_id=dag.dag_id) }}">
-                    <span class="glyphicon glyphicon-stats" aria-hidden="true" data-original-title="Tasks Duration"></span>
+                    <span class="glyphicon glyphicon-stats" aria-hidden="true" data-original-title="任务执行时间"></span>
                 </a>
 
                 <!-- Retries -->
                 <a href="{{ url_for('airflow.tries', dag_id=dag.dag_id) }}">
-                    <span class="glyphicon glyphicon-duplicate" aria-hidden="true" data-original-title="Task Tries"></span>
+                    <span class="glyphicon glyphicon-duplicate" aria-hidden="true" data-original-title="任务重试"></span>
                 </a>
 
                 <!-- Landing Times -->
                 <a href="{{ url_for("airflow.landing_times", dag_id=dag.dag_id) }}">
-                    <span class="glyphicon glyphicon-plane" aria-hidden="true" data-original-title="Landing Times"></span>
+                    <span class="glyphicon glyphicon-plane" aria-hidden="true" data-original-title="终止时间"></span>
                 </a>
 
                 <!-- Gantt -->
                 <a href="{{ url_for("airflow.gantt", dag_id=dag.dag_id) }}">
-                    <span class="glyphicon glyphicon-align-left" aria-hidden="true" data-original-title="Gantt View"></span>
+                    <span class="glyphicon glyphicon-align-left" aria-hidden="true" data-original-title="甘特图"></span>
                 </a>
 
                 <!-- Code -->
                 <a href="{{ url_for("airflow.code", dag_id=dag.dag_id) }}">
-                    <span class="glyphicon glyphicon-file" aria-hidden="true" data-original-title="Code View"></span>
+                    <span class="glyphicon glyphicon-file" aria-hidden="true" data-original-title="查看代码"></span>
                 </a>
 
                 <!-- Logs -->
                 <a href="/admin/log/?sort=1&amp;desc=1&amp;flt1_dag_id_equals={{ dag.dag_id }}">
-                    <span class="glyphicon glyphicon-align-justify" aria-hidden="true" data-original-title="Logs"></span>
+                    <span class="glyphicon glyphicon-align-justify" aria-hidden="true" data-original-title="日志"></span>
                 </a>
                 {% endif %}
 
                 <!-- Refresh -->
                 <a href="{{ url_for("airflow.refresh", dag_id=dag_id) }}">
-                  <span class="glyphicon glyphicon-refresh" aria-hidden="true" data-original-title="Refresh"></span>
+                  <span class="glyphicon glyphicon-refresh" aria-hidden="true" data-original-title="刷新"></span>
                 </a>
 
                 </td>
@@ -197,7 +197,7 @@
     </table>
     <div class="row">
       <div class="col-sm-12" style="text-align:right;">
-        <div class="dataTables_info" id="dags_info" role="status" aria-live="polite" style="padding-top: 0px;">Showing {{num_dag_from}} to {{num_dag_to}} of {{num_of_all_dags}} entries</div>
+        <div class="dataTables_info" id="dags_info" role="status" aria-live="polite" style="padding-top: 0px;">显示 {{num_dag_from}} 至 {{num_dag_to}} 总计 {{num_of_all_dags}} 行</div>
       </div>
     </div>
     <div class="row">
@@ -209,9 +209,9 @@
 
     </div>
     {% if not hide_paused %}
-    <a href="/admin/?showPaused=False">Hide Paused DAGs</a>
+    <a href="/admin/?showPaused=False">隐藏停止的DAGs</a>
     {% else %}
-    <a href="/admin/?showPaused=True">Show Paused DAGs</a>
+    <a href="/admin/?showPaused=True">显示停止的DAGs</a>
     {% endif %}
   </div>
 {% endblock %}
@@ -224,6 +224,21 @@
   <script src="{{ url_for('static', filename='bootstrap3-typeahead.min.js') }}"></script>
   <script>
 
+	// var url = window.location.href;
+	// var theRequest = new Object();
+	// if (url.indexOf("?") != -1) {
+ //      var str = url.substr(url.indexOf("?") + 1);
+ //      strs = str.split("&");
+ //      for(var i = 0; i < strs.length; i ++) {
+ //         theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+ //      }
+ //   	}
+
+	// if(theRequest["hidden"] == "true"){
+	// 	$("body").css("padding-top","0");
+	// 	$("nav").hide();
+	// }
+
       const DAGS_INDEX = {{ url_for('admin.index') }}
       const ENTER_KEY_CODE = 13
 
@@ -231,10 +246,24 @@
         // check for key press on ENTER (key code 13) to trigger the search
         if (e.which === ENTER_KEY_CODE) {
           search_query = $('#dag_query').val();
-          window.location = DAGS_INDEX + "?search="+ encodeURI(search_query);
+
+          window.location = DAGS_INDEX + "?search="+ encodeURI(search_query) + getParam();
           e.preventDefault();
         }
       });
+
+      function getParam() {
+        var add = "";
+        for(var key in theRequest){
+          if(key == "search"){
+            continue;
+          }else{
+            add += "&" + key + "=" + theRequest[key];
+          }
+        }
+
+        return add;
+      }
 
       $('#page_size').on('change', function() {
         p_size = $(this).val();
@@ -242,7 +271,7 @@
       });
 
       function confirmTriggerDag(dag_id){
-          return confirm("Are you sure you want to run '"+dag_id+"' now?");
+          return confirm("您确定现在要执行 '"+dag_id+"' 吗？");
       }
       all_dags = $("[id^=toggle]");
       $.each(all_dags, function(i,v) {
@@ -271,7 +300,7 @@
         afterSelect: function(value) {
           search_query = value.trim()
           if (search_query) {
-            window.location = DAGS_INDEX + "?search="+ encodeURI(search_query);
+            window.location = DAGS_INDEX + "?search="+ encodeURI(search_query) + getParam();
           }
         }
       });

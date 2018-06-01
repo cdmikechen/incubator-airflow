@@ -56,48 +56,48 @@
       {% endif %}
       <li><a href="{{ url_for("airflow.graph", dag_id=dag.dag_id, root=root) }}">
           <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-        Graph View</a></li>
+        图像视图</a></li>
       <li><a href="{{ url_for("airflow.tree", dag_id=dag.dag_id, num_runs=25, root=root) }}">
           <span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span>
-        Tree View
+        树形视图
       </a></li>
       <li><a href="{{ url_for("airflow.duration", dag_id=dag.dag_id, days=30, root=root) }}">
           <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
-          Task Duration
+          任务执行时间
       </a></li>
       <li><a href="{{ url_for("airflow.tries", dag_id=dag.dag_id, days=30, root=root) }}">
           <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
-          Task Tries
+          任务重试
       </a></li>
       <li>
         <a href="{{ url_for("airflow.landing_times", dag_id=dag.dag_id, days=30, root=root) }}">
           <span class="glyphicon glyphicon-plane" aria-hidden="true"></span>
-          Landing Times
+          终止时间
         </a>
       </li>
       <li>
         <a href="{{ url_for("airflow.gantt", dag_id=dag.dag_id, root=root) }}">
           <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
           <i class="icon-align-left"></i>
-          Gantt
+          甘特图
         </a>
       </li>
       <li>
       <a href="{{ url_for("airflow.dag_details", dag_id=dag.dag_id) }}">
           <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-          Details
+          日志
         </a>
       </li>
       <li>
         <a href="{{ url_for("airflow.code", dag_id=dag.dag_id, root=root) }}">
           <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-          Code
+          查看代码
         </a>
       </li>
       <li>
         <a href="{{ url_for("airflow.refresh", dag_id=dag.dag_id) }}" title="Refresh">
           <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-          Refresh
+          刷新
         </a>
       </li>
     </ul>
@@ -112,7 +112,7 @@
         <div class="modal-header">
           <h4 class="modal-title" id="myModalLabel">
             <span id='task_id'></span>
-            <button id="btn_filter" type="button" class="btn btn-default" title="Filter on this task and upstream ">
+            <button id="btn_filter" type="button" class="btn btn-default" title="对该任务和上游进行筛选">
               <span class="glyphicon glyphicon-filter" style="margin-left: 0px;" aria-hidden="true"></span>
             </button>
               on
@@ -127,90 +127,90 @@
               <hr/>
           </div>
           <button id="btn_task" type="button" class="btn btn-primary">
-            Task Instance Details
+            任务实例细节
           </button>
           <button id="btn_rendered" type="button" class="btn btn-primary">
-            Rendered
+            提供
           </button>
           <button id="btn_ti" type="button" class="btn btn-primary">
-            Task Instances
+            任务实例
           </button>
           <button id="btn_log" type="button" class="btn btn-primary">
-            View Log
+            查看日志
           </button>
           <hr/>
           <button id="btn_run" type="button" class="btn btn-primary"
-            title="Runs a single task instance">
-            Run
+            title="运行一个单独的任务实例">
+            运行
           </button>
           <span class="btn-group">
             <button id="btn_ignore_all_deps"
               type="button" class="btn" data-toggle="button"
-              title="Ignores all non-critical dependencies, including task state and task_deps"
-              >Ignore All Deps</button>
+              title="忽略所有非关键依赖项，包括任务状态和任务集"
+              >忽略所有依赖</button>
           </span>
           <span class="btn-group">
             <button id="btn_ignore_ti_state"
               type="button" class="btn" data-toggle="button"
-              title="Ignore previous success/failure"
-              >Ignore Task State</button>
+              title="忽略之前的成功/失败"
+              >忽略任务状态</button>
           </span>
           <button id="btn_ignore_task_deps"
             type="button" class="btn" data-toggle="button"
-            title="Disregard the task-specific dependencies, e.g. status of upstream task instances and depends_on_past"
-            >Ignore Task Deps</button>
+            title="忽略特定任务的依赖关系，例如上游任务实例的状态和依赖任务的状态"
+            >忽略任务依赖</button>
           </span>
           <hr/>
           <button id="btn_clear" type="button" class="btn btn-primary"
-              title="Clearing deletes the previous state of the task instance, allowing it to get re-triggered by the scheduler or a backfill command"
-              >Clear
+              title="清除删除任务实例的前一个状态，允许它由调度器或回填命令重新触发。"
+              >清除
           </button>
           <span class="btn-group">
             <button id="btn_past"
               type="button" class="btn" data-toggle="button"
-              title="Also include past task instances when clearing this one"
-              >Past</button>
+              title="在清除此任务时还包括过去的任务实例"
+              >过去</button>
             <button id="btn_future"
               type="button" class="btn" data-toggle="button"
-              title="Also include future task instances when clearing this one"
-              >Future</button>
+              title="还包括清除此任务时的未来任务实例"
+              >将来</button>
             <button id="btn_upstream"
               type="button" class="btn" data-toggle="button"
-              title="Also include upstream dependencies"
-              >Upstream</button>
+              title="还包括上游依赖关系"
+              >上游</button>
             <button id="btn_downstream"
               type="button" class="btn active" data-toggle="button"
-              title="Also include downstream dependencies"
+              title="还包括下游依赖关系"
               >
-              Downstream
+              下游
             </button>
             <button id="btn_recursive"
               type="button" class="btn active" data-toggle="button">
-               Recursive
+               递归
             </button>
           </span>
           <hr/>
           <button id="btn_success" type="button" class="btn btn-primary">
-            Mark Success
+            标记成功
           </button>
           <span class="btn-group">
             <button id="btn_success_past"
-              type="button" class="btn" data-toggle="button">Past</button>
+              type="button" class="btn" data-toggle="button">过去</button>
             <button id="btn_success_future"
               type="button" class="btn" data-toggle="button">
-              Future
+              将来
             </button>
             <button id="btn_success_upstream"
-              type="button" class="btn" data-toggle="button">Upstream</button>
+              type="button" class="btn" data-toggle="button">上游</button>
             <button id="btn_success_downstream"
               type="button" class="btn" data-toggle="button">
-              Downstream
+              下游
             </button>
           </span>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">
-            Close
+            关闭
           </button>
         </div>
       </div>
@@ -229,18 +229,18 @@
         </div>
         <div class="modal-body">
           <button id="btn_edit_dagrun" type="button" class="btn btn-primary">
-            Edit
+            编辑
           </button>
           <button id="btn_dagrun_clear" type="button" class="btn btn-primary">
-            Clear
+            清除
           </button>
           <button id="btn_dagrun_success" type="button" class="btn btn-primary">
-            Mark Success
+            标记成功
           </button>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">
-            Close
+            关闭
           </button>
         </div>
       </div>

@@ -37,35 +37,35 @@
     <br>
     <table class="table table-striped table-bordered">
       <tr>
-        <th>schedule_interval</td>
+        <th>调度时间间隔</td>
         <td>{{ dag.schedule_interval }}</td>
       </tr>
       <tr>
-        <th>max_active_runs</td>
+        <th>最大活跃运行数</td>
         <td>{{ dag.active_runs | length }} / {{ dag.max_active_runs }}</td>
       </tr>
       <tr>
-        <th>concurrency</td>
+        <th>并发</td>
         <td>{{ dag.concurrency }}</td>
       </tr>
       <tr>
-        <th>default_args</td>
+        <th>默认参数</td>
         <td><code>{{ dag.default_args }}</code></td>
       </tr>
       <tr>
-        <th>tasks count</td>
+        <th>任务总计</td>
         <td>{{ dag.tasks|length }}</td>
       </tr>
       <tr>
-        <th>task ids</td>
+        <th>任务ids</td>
         <td>{{ dag.task_ids }}</td>
       </tr>
       <tr>
-        <th>filepath</td>
+        <th>文件路径</td>
         <td>{{ dag.filepath }}</td>
       </tr>
       <tr>
-        <th>owner</td>
+        <th>所有者</td>
         <td>{{ dag.owner }}</td>
       </tr>
     </table >

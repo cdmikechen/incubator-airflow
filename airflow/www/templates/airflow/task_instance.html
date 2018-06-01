@@ -39,13 +39,13 @@
   <ul class="nav nav-pills">
     <li><a href="{{ url_for("airflow.task", dag_id=dag.dag_id, task_id=task_id, execution_date=execution_date) }}">
         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-      Task Instance Details</a></li>
+      任务实例详细</a></li>
     <li><a href="{{ url_for("airflow.rendered", dag_id=dag.dag_id, task_id=task_id, execution_date=execution_date) }}">
         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-      Rendered Template</a></li>
+      模板</a></li>
     <li><a href="{{ url_for("airflow.log", dag_id=dag.dag_id, task_id=task_id, execution_date=execution_date) }}">
         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-      Log</a></li>
+      日志</a></li>
     <li><a href="{{ url_for("airflow.xcom", dag_id=dag.dag_id, task_id=task_id, execution_date=execution_date) }}">
         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
       XCom</a></li>

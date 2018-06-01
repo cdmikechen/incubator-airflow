@@ -37,9 +37,9 @@
     <div class="form-inline">
         <form method="get" style="float:left;">
             {{ state_token }}
-            Run:
+            运行:
             {{ form.execution_date(class_="form-control") | safe }}
-            Layout:
+            布局:
             {{ form.arrange(class_="form-control") | safe }}
             <input type="hidden" name="root" value="{{ root }}">
             <input type="hidden" value="{{ dag.dag_id }}" name="dag_id">
@@ -61,13 +61,13 @@
     {% endfor %}
 
     <div style"background-color: blue;">
-    <div class="legend_item state" style="border-color:white;">no status</div>
-    <div class="legend_item state" style="border-color:grey;">queued</div>
-    <div class="legend_item state" style="border-color:gold;">retry</div>
-    <div class="legend_item state" style="border-color:pink;">skipped</div>
-    <div class="legend_item state" style="border-color:red;">failed</div>
-    <div class="legend_item state" style="border-color:lime;">running</div>
-    <div class="legend_item state" style="border-color:green;">success</div>
+    <div class="legend_item state" style="border-color:white;">无状态</div>
+    <div class="legend_item state" style="border-color:grey;">队列中</div>
+    <div class="legend_item state" style="border-color:gold;">重试</div>
+    <div class="legend_item state" style="border-color:pink;">跳过</div>
+    <div class="legend_item state" style="border-color:red;">失败</div>
+    <div class="legend_item state" style="border-color:lime;">运行中</div>
+    <div class="legend_item state" style="border-color:green;">成功</div>
     </div>
     <div style="clear:both;"></div>
 </div>
@@ -272,16 +272,16 @@
             .attr("data-original-title", function(d) {
               // Tooltip
               task = tasks[task_id];
-              tt =  "Task_id: " + ti.task_id + "<br>";
-              tt += "Run: " + ti.execution_date + "<br>";
+              tt =  "任务id: " + ti.task_id + "<br>";
+              tt += "运行: " + ti.execution_date + "<br>";
               if(ti.run_id != undefined){
-                tt += "run_id: <nobr>" + ti.run_id + "</nobr><br>";
+                tt += "运行id: <nobr>" + ti.run_id + "</nobr><br>";
               }
-              tt += "Operator: " + task.task_type + "<br>";
-              tt += "Started: " + ti.start_date + "<br>";
-              tt += "Ended: " + ti.end_date + "<br>";
-              tt += "Duration: " + ti.duration + "<br>";
-              tt += "State: " + ti.state + "<br>";
+              tt += "操作: " + task.task_type + "<br>";
+              tt += "启动: " + ti.start_date + "<br>";
+              tt += "结束: " + ti.end_date + "<br>";
+              tt += "持续: " + ti.duration + "<br>";
+              tt += "状态: " + ti.state + "<br>";
               return tt;
             });
         });
