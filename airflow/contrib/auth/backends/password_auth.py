@@ -87,7 +87,7 @@ class PasswordUser(models.User):
 
     def is_superuser(self):
         '''Access all the things'''
-        return True
+        return False
 
 
 @login_manager.user_loader

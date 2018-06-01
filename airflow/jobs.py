@@ -29,7 +29,7 @@ import sys
 import threading
 import time
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from past.builtins import basestring
 from sqlalchemy import (
     Column, Integer, String, DateTime, func, Index, or_, and_, not_)
@@ -870,7 +870,11 @@ class SchedulerJob(BaseJob):
             if next_run_date and min_task_end_date and next_run_date > min_task_end_date:
                 return
 
+            print (dag.dag_id + " next_run_date is %s , period_end is %s" %(next_run_date, period_end))
             if next_run_date and period_end and period_end <= datetime.utcnow():
+
+                # utc时间加8小时转为本地时间
+                # next_run_date = next_run_date + timedelta(hours=8)
                 next_run = dag.create_dagrun(
                     run_id=DagRun.ID_PREFIX + next_run_date.isoformat(),
                     execution_date=next_run_date,
@@ -2023,6 +2027,8 @@ class BackfillJob(BaseJob):
         :type session: Session
         :return: a DagRun in state RUNNING or None
         """
+        # utc时间加8小时转为本地时间
+        run_date = run_date + timedelta(hours=8)
         run_id = BackfillJob.ID_FORMAT_PREFIX.format(run_date.isoformat())
 
         # consider max_active_runs but ignore when running subdags

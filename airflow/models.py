@@ -3005,9 +3005,12 @@ class DAG(BaseDag, LoggingMixin):
             return dttm + self._schedule_interval
 
     def previous_schedule(self, dttm):
+        # 正常有dagrun的话是True
         if isinstance(self._schedule_interval, six.string_types):
-            cron = croniter(self._schedule_interval, dttm)
-            return cron.get_prev(datetime)
+            cron = croniter(self._schedule_interval, dttm - timedelta(hours=8))
+            # print (cron.get_prev(datetime))
+            # 因为执行调度的时间被改掉了，所以找前面的一个时间也需要重新调整一下
+            return cron.get_prev(datetime) + timedelta(hours=8)
         elif isinstance(self._schedule_interval, timedelta):
             return dttm - self._schedule_interval
 
@@ -3075,6 +3078,11 @@ class DAG(BaseDag, LoggingMixin):
         qry = qry.order_by(DR.execution_date.desc())
 
         last = qry.first()
+        # if last and last.execution_date :
+        #     last.execution_date = last.execution_date + timedelta(hours=8)
+        # 这个是在home视图点开始时间的叹号时候的时间，要调整一下
+        if last and last.start_date :
+            last.start_date = last.start_date + timedelta(hours=8)
 
         return last
 
@@ -3758,6 +3766,12 @@ class DAG(BaseDag, LoggingMixin):
         :param session: database session
         :type session: Session
         """
+
+        # if not start_date:
+        #     start_date = start_date + timedelta(hours=8)
+        # if not execution_date:
+        #     execution_date = execution_date + timedelta(hours=8)
+
         run = DagRun(
             dag_id=self.dag_id,
             run_id=run_id,
@@ -4420,6 +4434,7 @@ class DagRun(Base, LoggingMixin):
 
     @classmethod
     def id_for_date(cls, date, prefix=ID_FORMAT_PREFIX):
+        date = date + timedelta(hours=8)
         return prefix.format(date.isoformat()[:19])
 
     @provide_session
@@ -4562,6 +4577,8 @@ class DagRun(Base, LoggingMixin):
     def get_previous_scheduled_dagrun(self, session=None):
         """The previous, SCHEDULED DagRun, if there is one"""
         dag = self.get_dag()
+
+        # print (dag.dag_id + ' previous_schedule execution_date is %s' %(dag.previous_schedule(self.execution_date - timedelta(hours=8))))
 
         return session.query(DagRun).filter(
             DagRun.dag_id == self.dag_id,

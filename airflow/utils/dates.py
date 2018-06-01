@@ -24,12 +24,23 @@ import six
 from croniter import croniter
 
 
+# cron_presets = {
+#     '@hourly': '0 * * * *',
+#     '@daily': '0 0 * * *',
+#     '@weekly': '0 0 * * 0',
+#     '@monthly': '0 0 1 * *',
+#     '@yearly': '0 0 1 1 *',
+# }
+
+# 由于是用的格林尼治时间，所以会和这边时间差8小时，因此我们需要每次都-8小时
+# 不过考虑到实际执行，我们都往后延续7小时吧
 cron_presets = {
     '@hourly': '0 * * * *',
-    '@daily': '0 0 * * *',
-    '@weekly': '0 0 * * 0',
-    '@monthly': '0 0 1 * *',
-    '@yearly': '0 0 1 1 *',
+    # '@daily': '0 0 * * *',
+    '@daily': '0 16 * * *',
+    '@weekly': '0 16 * * 6',
+    '@monthly': '0 16 L * *',
+    '@yearly': '0 16 12 31 *',
 }
 
 
