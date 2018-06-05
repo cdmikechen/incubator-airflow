@@ -1166,6 +1166,11 @@ class Airflow(BaseView):
                 DR.execution_date >= min_date)
                 .all()
         )
+
+        # 更新启动时间为东八区
+        for drs in dag_runs:
+            drs.start_date = drs.start_date + timedelta(hours=8)
+
         dag_runs = {
             dr.execution_date: alchemy_to_dict(dr) for dr in dag_runs}
 
@@ -1177,10 +1182,10 @@ class Airflow(BaseView):
         task_instances = {}
         for ti in tis:
 
-            # if ti.start_date is not None:
-            #     ti.start_date = ti.start_date + timedelta(hours=8)
-            # if ti.end_date is not None:
-            #     ti.end_date = ti.end_date + timedelta(hours=8)
+            if ti.start_date is not None:
+                ti.start_date = ti.start_date + timedelta(hours=8)
+            if ti.end_date is not None:
+                ti.end_date = ti.end_date + timedelta(hours=8)
 
             tid = alchemy_to_dict(ti)
 
@@ -1189,10 +1194,10 @@ class Airflow(BaseView):
             #     tid["start_date"] = tid["start_date"] + timedelta(hours=8)
             # if tid["end_date"] is not None:
             #     tid["end_date"] = tid["end_date"] + timedelta(hours=8)
-            # if ti.start_date is not None:
-            #     ti.start_date = ti.start_date - timedelta(hours=8)
-            # if ti.end_date is not None:
-            #     ti.end_date = ti.end_date - timedelta(hours=8)
+            if ti.start_date is not None:
+                ti.start_date = ti.start_date - timedelta(hours=8)
+            if ti.end_date is not None:
+                ti.end_date = ti.end_date - timedelta(hours=8)
 
             dr = dag_runs.get(ti.execution_date)
             tid['external_trigger'] = dr['external_trigger'] if dr else False
@@ -1352,9 +1357,15 @@ class Airflow(BaseView):
         form = GraphForm(
             data={'execution_date': dttm.isoformat(), 'arrange': arrange})
 
+        print(dttm)
+        tis = dag.get_task_instances(session, dttm, dttm)
+        for ti in tis:
+            ti.start_date = ti.start_date + timedelta(hours=8)
+            ti.end_date = ti.end_date + timedelta(hours=8)
+
         task_instances = {
             ti.task_id: alchemy_to_dict(ti)
-            for ti in dag.get_task_instances(session, dttm, dttm)}
+            for ti in tis}
         tasks = {
             t.task_id: {
                 'dag_id': t.dag_id,
