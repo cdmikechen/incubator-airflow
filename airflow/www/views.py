@@ -1158,7 +1158,7 @@ class Airflow(BaseView):
         min_date = dates[0] if dates else datetime(2000, 1, 1)
 
         DR = models.DagRun
-        dag_runs = (
+        dag_runs_query = (
             session.query(DR)
                 .filter(
                 DR.dag_id == dag.dag_id,
@@ -1168,11 +1168,14 @@ class Airflow(BaseView):
         )
 
         # 更新启动时间为东八区
-        for drs in dag_runs:
+        for drs in dag_runs_query:
             drs.start_date = drs.start_date + timedelta(hours=8)
 
         dag_runs = {
-            dr.execution_date: alchemy_to_dict(dr) for dr in dag_runs}
+            dr.execution_date: alchemy_to_dict(dr) for dr in dag_runs_query}
+
+        for drs in dag_runs_query:
+            drs.start_date = drs.start_date - timedelta(hours=8)
 
         dates = sorted(list(dag_runs.keys()))
         max_date = max(dates) if dates else None
@@ -1357,7 +1360,7 @@ class Airflow(BaseView):
         form = GraphForm(
             data={'execution_date': dttm.isoformat(), 'arrange': arrange})
 
-        print(dttm)
+        # print(dttm)
         tis = dag.get_task_instances(session, dttm, dttm)
         for ti in tis:
             ti.start_date = ti.start_date + timedelta(hours=8)
@@ -1374,6 +1377,11 @@ class Airflow(BaseView):
             for t in dag.tasks}
         if not tasks:
             flash("No tasks found", "error")
+
+        for ti in tis:
+            ti.start_date = ti.start_date - timedelta(hours=8)
+            ti.end_date = ti.end_date - timedelta(hours=8)
+
         session.commit()
         session.close()
         doc_md = markdown.markdown(dag.doc_md) if hasattr(dag, 'doc_md') and dag.doc_md else ''
