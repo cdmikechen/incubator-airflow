@@ -2999,8 +2999,8 @@ class DAG(BaseDag, LoggingMixin):
 
     def following_schedule(self, dttm):
         if isinstance(self._schedule_interval, six.string_types):
-            cron = croniter(self._schedule_interval, dttm)
-            return cron.get_next(datetime)
+            cron = croniter(self._schedule_interval, dttm - timedelta(hours=8))
+            return cron.get_next(datetime) + timedelta(hours=8)
         elif isinstance(self._schedule_interval, timedelta):
             return dttm + self._schedule_interval
 

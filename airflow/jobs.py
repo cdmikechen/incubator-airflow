@@ -837,7 +837,7 @@ class SchedulerJob(BaseJob):
             # don't ever schedule prior to the dag's start_date
             if dag.start_date:
                 next_run_date = (dag.start_date if not next_run_date
-                                 else max(next_run_date, dag.start_date))
+                                 else max(next_run_date, dag.start_date + timedelta(hours=8)))
                 if next_run_date == dag.start_date:
                     next_run_date = dag.normalize_schedule(dag.start_date)
 
@@ -847,7 +847,7 @@ class SchedulerJob(BaseJob):
                 )
 
             # don't ever schedule in the future
-            if next_run_date > datetime.utcnow():
+            if next_run_date > datetime.utcnow() + timedelta(hours=8):
                 return
 
             # this structure is necessary to avoid a TypeError from concatenating
@@ -871,7 +871,7 @@ class SchedulerJob(BaseJob):
                 return
 
             print (dag.dag_id + " next_run_date is %s , period_end is %s" %(next_run_date, period_end))
-            if next_run_date and period_end and period_end <= datetime.utcnow():
+            if next_run_date and period_end and period_end <= datetime.utcnow() + timedelta(hours=8):
 
                 # utc时间加8小时转为本地时间
                 # next_run_date = next_run_date + timedelta(hours=8)
