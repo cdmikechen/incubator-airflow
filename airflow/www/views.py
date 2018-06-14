@@ -1860,11 +1860,15 @@ class HomeView(AdminIndexView):
         list_dag_id = []
         if arg_filter_owner_query != None and arg_filter_date and arg_filter_state :
 
+            # UTC时间需要减8小时才是启动时间，过滤的时候按照减8小时来计算
+            d = datetime.strptime(arg_filter_date + ' 00:00:00', '%Y-%m-%d %H:%M:%S')
+            d = d - timedelta(hours=8)
+
             qry = (
                 session.query(DagRun.dag_id)
                     .join(DM, DM.dag_id == DagRun.dag_id)
                     .filter(DagRun.state == arg_filter_state if arg_filter_state != None else 1==1)
-                    .filter(DagRun.start_date >= arg_filter_date if arg_filter_date != None else 1==1)
+                    .filter(DagRun.start_date >= d.strftime('%Y-%m-%d %H:%M:%S') if arg_filter_date != None else 1==1)
                     .filter(DM.is_paused == False)
                     .filter(DM.owners == arg_filter_owner_query)
                     .filter(DagRun.dag_id.like((arg_search_query if arg_search_query != None else '%') + '%'))

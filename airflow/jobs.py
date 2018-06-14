@@ -809,11 +809,14 @@ class SchedulerJob(BaseJob):
                 else:
                     new_start = dag.previous_schedule(last_start)
 
+                # print ('%s new_start is %s' %(dag.dag_id, new_start))
+
                 if dag.start_date:
                     if new_start >= dag.start_date:
                         dag.start_date = new_start
                 else:
                     dag.start_date = new_start
+                # print ('%s start_date is %s' %(dag.dag_id, dag.start_date))
 
             next_run_date = None
             if not last_scheduled_run:
@@ -837,7 +840,7 @@ class SchedulerJob(BaseJob):
             # don't ever schedule prior to the dag's start_date
             if dag.start_date:
                 next_run_date = (dag.start_date if not next_run_date
-                                 else max(next_run_date, dag.start_date + timedelta(hours=8)))
+                                 else max(next_run_date, dag.start_date))
                 if next_run_date == dag.start_date:
                     next_run_date = dag.normalize_schedule(dag.start_date)
 
@@ -2028,7 +2031,8 @@ class BackfillJob(BaseJob):
         :return: a DagRun in state RUNNING or None
         """
         # utc时间加8小时转为本地时间
-        run_date = run_date + timedelta(hours=8)
+        # run_date = run_date + timedelta(hours=8)
+        run_date = run_date
         run_id = BackfillJob.ID_FORMAT_PREFIX.format(run_date.isoformat())
 
         # consider max_active_runs but ignore when running subdags
