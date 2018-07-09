@@ -3820,6 +3820,9 @@ class DAG(BaseDag, LoggingMixin):
             DagModel).filter(DagModel.dag_id == self.dag_id).first()
         if not orm_dag:
             orm_dag = DagModel(dag_id=self.dag_id)
+            # 如果是同步任务，自动设置为有效
+            if self.dag_id.startswith("syn"):
+                orm_dag.is_paused = False
             self.log.info("Creating ORM DAG for %s", self.dag_id)
         orm_dag.fileloc = self.fileloc
         orm_dag.is_subdag = self.is_subdag
